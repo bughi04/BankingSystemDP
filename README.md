@@ -9,7 +9,7 @@
 
 A Java desktop application for managing a banking system, built as a university project to demonstrate and apply **8 classic software design patterns** in a real, working context. The project includes a fully functional Java Swing GUI for bank officers, persistent data storage, and live UI updates via the Observer pattern.
 
-> **Note**: Some parts of the code were initially written with AI assistance and later reviewed, refactored, and debugged by me, similar to how developers use tools like IDE code generation or GitHub Copilot as a productivity aid.
+> **Note**: Some parts of the code were initially written with AI assistance and later reviewed/refactored/debugged by me.
 
 ---
 
@@ -17,14 +17,14 @@ A Java desktop application for managing a banking system, built as a university 
 
 | Pattern | Where it is used |
 |---|---|
-| **Singleton** | `Logger` — one shared logging instance across the whole application |
-| **Builder** | `Client.ClientBuilder` — constructs clients with optional fields (email, phone) |
-| **Factory** | `AccountFactory` — creates `RonAccount` or `EurAccount` from a type string |
-| **Decorator** | `SavingsBackupDecorator` — wraps an account to add automatic fallthrough to a backup account when funds are insufficient |
-| **Command** | `DeposeCommand`, `RetrieveCommand`, `TransferCommand` and `TransactionHistory` — supports full undo of any transaction |
-| **Chain of Responsibility** | `BalanceCheckHandler`, `LimitCheckHandler`, `FraudCheckHandler` — layered transaction validation pipeline |
-| **Observer** | `AccountObserver` interface — the GUI table refreshes automatically whenever any account balance changes |
-| **Serialization** | `BankFileManager` — saves and restores the entire bank state to and from a `.ser` file |
+| **Singleton** | `Logger` - one shared logging instance across the whole application |
+| **Builder** | `Client.ClientBuilder` - constructs clients with optional fields (email, phone) |
+| **Factory** | `AccountFactory` - creates `RonAccount` or `EurAccount` from a type string |
+| **Decorator** | `SavingsBackupDecorator` - wraps an account to add automatic fallthrough to a backup account when funds are insufficient |
+| **Command** | `DeposeCommand`, `RetrieveCommand`, `TransferCommand` and `TransactionHistory` - supports full undo of any transaction |
+| **Chain of Responsibility** | `BalanceCheckHandler`, `LimitCheckHandler`, `FraudCheckHandler` - layered transaction validation pipeline |
+| **Observer** | `AccountObserver` interface - the GUI table refreshes automatically whenever any account balance changes |
+| **Serialization** | `BankFileManager` - saves and restores the entire bank state to and from a `.ser` file |
 
 ---
 
@@ -40,9 +40,9 @@ A Java desktop application for managing a banking system, built as a university 
 
 ### Transaction Validation
 Every withdrawal passes through a three-handler security chain before executing:
-1. **BalanceCheckHandler** -- blocks the transaction if funds are insufficient
-2. **LimitCheckHandler** -- blocks transactions above the 5,000 daily limit with a dedicated warning dialog
-3. **FraudCheckHandler** -- fraud screening checkpoint (extensible)
+1. **BalanceCheckHandler** - blocks the transaction if funds are insufficient
+2. **LimitCheckHandler** - blocks transactions above the 5,000 daily limit with a dedicated warning dialog
+3. **FraudCheckHandler** - fraud screening checkpoint (extensible)
 
 When a `SavingsBackupDecorator` is active on an account, the balance check is skipped at chain level. The decorator handles the insufficient-balance case itself by retrying against the backup account, so blocking it in the chain first would break that logic.
 
@@ -59,10 +59,10 @@ Every deposit, withdrawal, and transfer is wrapped in a `Command` object and pus
 
 ## Technologies Used
 
-- **Java 17+** -- core application language
-- **Java Swing** -- desktop GUI
-- **Java Serialization** (`java.io.Serializable`) -- persistent storage
-- **JUnit 5** -- unit tests for account logic
+- **Java 17+** - core application language
+- **Java Swing** - desktop GUI
+- **Java Serialization** (`java.io.Serializable`) - persistent storage
+- **JUnit 5** - unit tests for account logic
 
 ---
 
