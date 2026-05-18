@@ -1,0 +1,1 @@
+I have used AI in order to better understand the Observer pattern in Java, details regarding GUI and Serialization and how they could be implemented in my Bank Management project + other examples
