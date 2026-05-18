@@ -2,14 +2,14 @@
 
 ![Java](https://img.shields.io/badge/Java-17%2B-orange?logo=openjdk)
 ![Swing](https://img.shields.io/badge/GUI-Java%20Swing-4A90D9?logo=java)
-![Maven](https://img.shields.io/badge/Build-Maven%2FIntelliJ-C71A36?logo=apache-maven)
 ![Design Patterns](https://img.shields.io/badge/Design%20Patterns-8-brightgreen)
 ![Serialization](https://img.shields.io/badge/Persistence-Java%20Serialization-yellow)
+![JUnit](https://img.shields.io/badge/Tests-JUnit%205-25A162?logo=junit5)
 ![Status](https://img.shields.io/badge/Status-Complete-success)
 
 A Java desktop application for managing a banking system, built as a university project to demonstrate and apply **8 classic software design patterns** in a real, working context. The project includes a fully functional Java Swing GUI for bank officers, persistent data storage, and live UI updates via the Observer pattern.
 
-> **Note**: Parts of the boilerplate and GUI scaffolding were initially generated with AI assistance, then reviewed, refactored, debugged, and integrated by me — similar to how modern developers use IDE code generation or GitHub Copilot as a productivity tool.
+> **Note**: Some parts of the code were initially written with AI assistance and later reviewed, refactored, and debugged by me, similar to how developers use tools like IDE code generation or GitHub Copilot as a productivity aid.
 
 ---
 
@@ -17,52 +17,52 @@ A Java desktop application for managing a banking system, built as a university 
 
 | Pattern | Where it is used |
 |---|---|
-| **Singleton** | `Logger` — single shared logging instance across the entire application |
+| **Singleton** | `Logger` — one shared logging instance across the whole application |
 | **Builder** | `Client.ClientBuilder` — constructs clients with optional fields (email, phone) |
 | **Factory** | `AccountFactory` — creates `RonAccount` or `EurAccount` from a type string |
-| **Decorator** | `SavingsBackupDecorator` — wraps an account to add automatic backup-account fallthrough on insufficient funds |
-| **Command** | `DeposeCommand`, `RetrieveCommand`, `TransferCommand` + `TransactionHistory` — supports full undo of any transaction |
-| **Chain of Responsibility** | `BalanceCheckHandler → LimitCheckHandler → FraudCheckHandler` — layered transaction validation pipeline |
+| **Decorator** | `SavingsBackupDecorator` — wraps an account to add automatic fallthrough to a backup account when funds are insufficient |
+| **Command** | `DeposeCommand`, `RetrieveCommand`, `TransferCommand` and `TransactionHistory` — supports full undo of any transaction |
+| **Chain of Responsibility** | `BalanceCheckHandler`, `LimitCheckHandler`, `FraudCheckHandler` — layered transaction validation pipeline |
 | **Observer** | `AccountObserver` interface — the GUI table refreshes automatically whenever any account balance changes |
-| **Serialization** | `BankFileManager` — saves and restores the entire bank state to/from a `.ser` file |
+| **Serialization** | `BankFileManager` — saves and restores the entire bank state to and from a `.ser` file |
 
 ---
 
 ## Features
 
-### Bank Officer Dashboard (GUI)
+### Bank Officer Dashboard
 - View all clients and their accounts in a split-pane dashboard
-- Add clients using a guided form (Builder pattern under the hood)
+- Add clients using a guided form (Builder pattern)
 - Open RON or EUR accounts (Factory pattern)
 - Perform deposits, withdrawals, and transfers with full undo support
-- Enable **Savings Backup** on any account — if the main account runs out of funds, withdrawals automatically fall through to a chosen backup account (Decorator pattern)
-- Save and load the entire bank state to a file — data persists across sessions
+- Enable Savings Backup on any account: if the main account runs out of funds, withdrawals automatically fall through to a chosen backup account (Decorator pattern)
+- Save and load the entire bank state to a file so data persists between sessions
 
-### Transaction Validation (Chain of Responsibility)
+### Transaction Validation
 Every withdrawal passes through a three-handler security chain before executing:
-1. **BalanceCheckHandler** — blocks the transaction if funds are insufficient
-2. **LimitCheckHandler** — blocks transactions above the 5,000 daily limit with a dedicated warning dialog
-3. **FraudCheckHandler** — fraud screening checkpoint (extensible)
+1. **BalanceCheckHandler** -- blocks the transaction if funds are insufficient
+2. **LimitCheckHandler** -- blocks transactions above the 5,000 daily limit with a dedicated warning dialog
+3. **FraudCheckHandler** -- fraud screening checkpoint (extensible)
 
-> When a `SavingsBackupDecorator` is active on an account, the balance check is intentionally skipped at chain level — the decorator itself handles the insufficient-balance case by retrying against the backup account.
+When a `SavingsBackupDecorator` is active on an account, the balance check is skipped at chain level. The decorator handles the insufficient-balance case itself by retrying against the backup account, so blocking it in the chain first would break that logic.
 
-### Undo System (Command Pattern)
-Every deposit, withdrawal, and transfer is wrapped in a `Command` object and pushed onto a stack in `TransactionHistory`. The **Undo Last Operation** button pops the last command and calls its `undo()` method to reverse it exactly.
+### Undo System
+Every deposit, withdrawal, and transfer is wrapped in a `Command` object and pushed onto a stack in `TransactionHistory`. The Undo button pops the last command and calls its `undo()` method to reverse it exactly.
 
-### Live UI Updates (Observer Pattern)
-`Account` holds a `transient` list of `AccountObserver` listeners. After every `depose()` or `retrieve()` call, it notifies all registered observers. The GUI implements `AccountObserver` and updates the accounts table automatically — no manual refresh needed.
+### Live UI Updates
+`Account` holds a list of `AccountObserver` listeners. After every `depose()` or `retrieve()` call it notifies all registered observers. The GUI implements `AccountObserver` and updates the accounts table automatically without any manual refresh.
 
-### Persistent Storage (Serialization)
+### Persistent Storage
 `BankFileManager` serializes the entire `Bank` object graph (clients, accounts, balances) to a `.ser` file using Java's built-in `ObjectOutputStream`. On load, all objects are reconstructed and the GUI re-registers itself as an observer on each account.
 
 ---
 
 ## Technologies Used
 
-- **Java 17+** — core application language
-- **Java Swing** — desktop GUI framework
-- **Java Serialization** (`java.io.Serializable`) — persistent storage
-- **JUnit 5** — unit tests for account logic
+- **Java 17+** -- core application language
+- **Java Swing** -- desktop GUI
+- **Java Serialization** (`java.io.Serializable`) -- persistent storage
+- **JUnit 5** -- unit tests for account logic
 
 ---
 
@@ -71,43 +71,43 @@ Every deposit, withdrawal, and transfer is wrapped in a `Command` object and pus
 ```
 src/ro/uvt/fi/dp/
 │
-├── Account.java               # Abstract base — Serializable + Observer support
-├── RonAccount.java            # RON account with tiered interest rates
-├── EurAccount.java            # EUR account
-├── AccountDecorator.java      # Decorator base class
-├── SavingsBackupDecorator.java# Concrete decorator — backup account fallthrough
+├── Account.java                 # Abstract base -- Serializable + Observer support
+├── RonAccount.java              # RON account with tiered interest rates
+├── EurAccount.java              # EUR account
+├── AccountDecorator.java        # Decorator base class
+├── SavingsBackupDecorator.java  # Concrete decorator -- backup account fallthrough
 │
-├── Client.java                # Builder pattern
-├── Bank.java                  # Top-level bank container
-├── AccountFactory.java        # Factory pattern
-├── AccountManager.java        # Core depose/retrieve/transfer logic
+├── Client.java                  # Builder pattern
+├── Bank.java                    # Top-level bank container
+├── AccountFactory.java          # Factory pattern
+├── AccountManager.java          # Core depose/retrieve/transfer logic
 │
-├── Command.java               # Command interface
-├── DeposeCommand.java         # Deposit + undo
-├── RetrieveCommand.java       # Withdraw + undo
-├── TransferCommand.java       # Transfer + undo
-├── TransactionHistory.java    # Command stack (undo support)
+├── Command.java                 # Command interface
+├── DeposeCommand.java           # Deposit + undo
+├── RetrieveCommand.java         # Withdraw + undo
+├── TransferCommand.java         # Transfer + undo
+├── TransactionHistory.java      # Command stack for undo support
 │
-├── TransactionHandler.java    # Chain of Responsibility base
-├── BalanceCheckHandler.java   # Handler 1 — balance check
-├── LimitCheckHandler.java     # Handler 2 — daily limit check
-├── FraudCheckHandler.java     # Handler 3 — fraud check
+├── TransactionHandler.java      # Chain of Responsibility base
+├── BalanceCheckHandler.java     # Handler 1 -- balance check
+├── LimitCheckHandler.java       # Handler 2 -- daily limit check
+├── FraudCheckHandler.java       # Handler 3 -- fraud check
 │
-├── AccountObserver.java       # Observer interface
-├── Logger.java                # Singleton logger
+├── AccountObserver.java         # Observer interface
+├── Logger.java                  # Singleton logger
 │
-├── BankFileManager.java       # Save / Load serialization
-├── BankOfficerGUI.java        # Main Swing dashboard
+├── BankFileManager.java         # Save and load via serialization
+├── BankOfficerGUI.java          # Main Swing dashboard
 │
-├── AccountTest.java           # JUnit 5 unit tests
-└── Test.java                  # Manual integration test (original lab runner)
+├── AccountTest.java             # JUnit 5 unit tests
+└── Test.java                    # Original console-based integration test
 ```
 
 ---
 
 ## Getting Started
 
-**Prerequisites:** Java 17+, IntelliJ IDEA (or any Java IDE / Maven)
+**Prerequisites:** Java 17+, IntelliJ IDEA or any Java IDE
 
 ```bash
 # Clone the repository
@@ -123,23 +123,20 @@ cd BankingSystemDP
 
 **Run unit tests:**
 ```bash
-# With Maven
 mvn test
-
-# Or run AccountTest.java directly from your IDE
 ```
 
 ---
 
-## Usage Workflow
+## Usage
 
-1. **Launch** — the dashboard opens with an empty bank named "My Bank"
-2. **Add a client** — click `+ Add Client`, fill in the form (name and address required)
-3. **Open an account** — select the client, click `Add Account`, choose RON or EUR
-4. **Perform transactions** — select an account row in the table, then use Deposit / Withdraw / Transfer
-5. **Enable Savings Backup** — select a main account, click `Enable Savings Backup`, pick a backup account; future withdrawals that exceed the main balance will automatically use the backup
-6. **Undo** — click `Undo Last Operation` to reverse the most recent transaction
-7. **Save / Load** — use the File menu or the header buttons to save the bank state to a `.ser` file and reload it later
+1. **Launch** -- the dashboard opens with an empty bank
+2. **Add a client** -- click `+ Add Client` and fill in the form (name and address required, email and phone optional)
+3. **Open an account** -- select a client, click `Add Account`, choose RON or EUR and set an initial balance
+4. **Perform transactions** -- select an account row in the table, then use Deposit, Withdraw, or Transfer
+5. **Enable Savings Backup** -- select a main account, click `Enable Savings Backup`, pick a backup account; future withdrawals that exceed the main balance will use the backup automatically
+6. **Undo** -- click `Undo Last Operation` to reverse the most recent transaction
+7. **Save / Load** -- use the File menu or the header buttons to save the bank state and reload it later
 
 ---
 
@@ -151,35 +148,35 @@ mvn test
 |---|---|
 | `deposit` | Balance increases correctly after a deposit |
 | `retrieve` | Balance decreases correctly after a withdrawal |
-| `noBalance` | Withdrawal beyond available funds throws the right exception |
-| `interest` | RON interest tiers (3% below 500, 8% above 500) |
+| `noBalance` | Withdrawing more than the balance throws the correct exception |
+| `interest` | RON interest tiers (3% below 500, 8% at 500 and above) |
 | `totalSum` | `getTotalAmount()` includes interest correctly |
 | `testEurTransfer` | EUR account transfers throw an exception (RON only) |
 | `transfer` | RON transfer moves funds between accounts correctly |
-| `BuildTest1` | Builder creates a client with only required fields |
+| `BuildTest1` | Builder creates a client with only the required fields |
 | `BuildTest2` | Builder correctly sets optional fields (email, phone) |
 | `AccFacRon` | Factory produces a `RonAccount` for type `"RON"` |
-| `AccFacEur` | Factory produces an `EurAccount` with correct interest |
+| `AccFacEur` | Factory produces an `EurAccount` with the correct interest rate |
 
 ---
 
 ## Key Design Decisions
 
-**Why skip the balance check for `SavingsBackupDecorator` accounts?**
-The `BalanceCheckHandler` only sees the main account's balance. Running it before a decorated withdrawal would block the transaction before the decorator's fallthrough logic ever runs. The solution is a second chain (`limitChainHead`) that starts from `LimitCheckHandler`, skipping the balance check entirely — the decorator handles that case itself.
+**Why is the balance check skipped for SavingsBackupDecorator accounts?**
+The `BalanceCheckHandler` only sees the main account's balance. If it runs before a decorated withdrawal, it blocks the transaction before the decorator's fallthrough logic ever gets a chance to run. To fix this, a second chain is built that starts from `LimitCheckHandler`, skipping the balance check entirely. The decorator handles the insufficient-funds case on its own.
 
-**Why is the observer list `transient`?**
-Java serialization would attempt to serialize the GUI along with the bank if the observer list were persisted, which is both incorrect and impractical. Marking it `transient` means the list is empty after loading, and `addObserversToAllAccounts()` re-registers the GUI immediately after deserialization.
+**Why is the observer list marked transient?**
+Java serialization would attempt to include the GUI object in the saved file if the observer list were persisted, which is both wrong and impractical. Marking it `transient` means the list is empty after loading, and `addObserversToAllAccounts()` re-registers the GUI right after deserialization.
 
-**Why are `TransferCommand` arguments swapped?**
-The existing `Account.transfer(target, amount)` is pull-oriented (target loses, caller gains). To achieve the intuitive send direction (source loses, target gains), `TransferCommand(target, source, amount)` intentionally swaps the arguments. The undo logic is consistent with this.
+**Why are the TransferCommand arguments swapped?**
+The existing `Account.transfer(target, amount)` is pull-oriented: the caller gains funds and the target loses them. To get the intuitive result where the source loses and the target gains, `TransferCommand` is created with the arguments swapped. The undo logic is written to match this, so reversing a transfer works correctly.
 
 ---
 
-## Future Enhancements
+## Possible Future Improvements
 
-- Database backend (replacing `.ser` files) for larger datasets
+- Database backend to replace `.ser` files for larger datasets
 - Interest calculation and monthly statement generation
-- Role-based access (teller vs. manager view)
+- Transaction history visible in the GUI
 - Export to PDF or CSV
-- Transaction history log visible in the GUI
+- Role-based access control (teller vs. manager)
