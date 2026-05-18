@@ -71,11 +71,11 @@ Every deposit, withdrawal, and transfer is wrapped in a `Command` object and pus
 ```
 src/ro/uvt/fi/dp/
 │
-├── Account.java                 # Abstract base -- Serializable + Observer support
+├── Account.java                 # Abstract base - Serializable + Observer support
 ├── RonAccount.java              # RON account with tiered interest rates
 ├── EurAccount.java              # EUR account
 ├── AccountDecorator.java        # Decorator base class
-├── SavingsBackupDecorator.java  # Concrete decorator -- backup account fallthrough
+├── SavingsBackupDecorator.java  # Concrete decorator - backup account fallthrough
 │
 ├── Client.java                  # Builder pattern
 ├── Bank.java                    # Top-level bank container
@@ -89,9 +89,9 @@ src/ro/uvt/fi/dp/
 ├── TransactionHistory.java      # Command stack for undo support
 │
 ├── TransactionHandler.java      # Chain of Responsibility base
-├── BalanceCheckHandler.java     # Handler 1 -- balance check
-├── LimitCheckHandler.java       # Handler 2 -- daily limit check
-├── FraudCheckHandler.java       # Handler 3 -- fraud check
+├── BalanceCheckHandler.java     # Handler 1 - balance check
+├── LimitCheckHandler.java       # Handler 2 - daily limit check
+├── FraudCheckHandler.java       # Handler 3 - fraud check
 │
 ├── AccountObserver.java         # Observer interface
 ├── Logger.java                  # Singleton logger
@@ -130,13 +130,13 @@ mvn test
 
 ## Usage
 
-1. **Launch** -- the dashboard opens with an empty bank
-2. **Add a client** -- click `+ Add Client` and fill in the form (name and address required, email and phone optional)
-3. **Open an account** -- select a client, click `Add Account`, choose RON or EUR and set an initial balance
-4. **Perform transactions** -- select an account row in the table, then use Deposit, Withdraw, or Transfer
-5. **Enable Savings Backup** -- select a main account, click `Enable Savings Backup`, pick a backup account; future withdrawals that exceed the main balance will use the backup automatically
-6. **Undo** -- click `Undo Last Operation` to reverse the most recent transaction
-7. **Save / Load** -- use the File menu or the header buttons to save the bank state and reload it later
+1. **Launch** - the dashboard opens with an empty bank
+2. **Add a client** - click `+ Add Client` and fill in the form (name and address required, email and phone optional)
+3. **Open an account** - select a client, click `Add Account`, choose RON or EUR and set an initial balance
+4. **Perform transactions** - select an account row in the table, then use Deposit, Withdraw, or Transfer
+5. **Enable Savings Backup** - select a main account, click `Enable Savings Backup`, pick a backup account; future withdrawals that exceed the main balance will use the backup automatically
+6. **Undo** - click `Undo Last Operation` to reverse the most recent transaction
+7. **Save / Load** - use the File menu or the header buttons to save the bank state and reload it later
 
 ---
 
